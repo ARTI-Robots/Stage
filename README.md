@@ -1,3 +1,15 @@
+> [!NOTE]
+> The Stage simulator in version 4.3.0 has been modified by adding the pause-functionality also in the headless-mode. 
+> To use this version, please create a debian-file and install it before building the ```stage_ros```-package using the following commands:
+>
+> ```bash
+> bloom-generate rosdebian --ros-distro noetic
+> fakeroot debian/rules binary
+> sudo dpkg -i ../ros-noetic-stage_4.3.0-0focal_amd64.deb
+> ```
+>
+
+
 # The Stage Simulator
 This is the Stage README file, containing an introduction, license and citation information. Stage is a 2(.5)D robotics standalone simulator and can also be used as a C++ library to build your own simulation environment. Up-to-date **documentation can be found [here](https://codedocs.xyz/CodeFinder2/Stage/)**.
 

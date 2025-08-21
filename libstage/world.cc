@@ -612,6 +612,14 @@ bool World::Update()
   if (PastQuitTime() || World::quit_all || this->quit)
     return true;
 
+  // if paused, return false to skip any further simulation
+  if(Paused())
+  {
+    // to prevent 100% CPU when paused, sleep for 10ms
+    usleep(10000);
+    return false;
+  }
+
   if (show_clock && ((this->updates % show_clock_interval) == 0)) {
     printf("\r[Stage: %s]", ClockString().c_str());
     fflush(stdout);

@@ -861,6 +861,7 @@ protected:
 public:
   uint64_t UpdateCount() { return updates; }
   bool paused; ///< if true, the simulation is stopped
+  bool was_paused; ///< true if simulation is/was paused, and set to false in the first simulation-step after unpause
 
   virtual void Start() { paused = false; }
   virtual void Stop() { paused = true; }

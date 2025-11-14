@@ -138,7 +138,7 @@ World::World(const std::string &,
 
       // protected
       cb_list(), extent(), graphics(false), option_table(), powerpack_list(), quit_time(0),
-      ray_list(), sim_time(0), superregions(), updates(0), wf(NULL), paused(false),
+      ray_list(), sim_time(0), superregions(), updates(0), wf(NULL), paused(false), was_paused(false),
       event_queues(1), // use 1 thread by default
       pending_update_callbacks(), active_energy(), active_velocity(),
       sim_interval(1e5), // 100 msec has proved a good default
@@ -617,7 +617,20 @@ bool World::Update()
   {
     // to prevent 100% CPU when paused, sleep for 10ms
     usleep(10000);
+    // Set was_paused to true so that in the first time-step after unpause we can update the callbacks before moving
+    was_paused = true;
+
     return false;
+  }
+
+  if(was_paused)
+  {
+    was_paused = false;
+    // Update world callbacks to get values that were received during the pause
+    CallUpdateCallbacks();
+    // Update the velocity and position of all position models. So all velocity changes during a pause should be applied
+    FOR_EACH (it, active_velocity)
+      (*it)->Update();
   }
 
   if (show_clock && ((this->updates % show_clock_interval) == 0)) {

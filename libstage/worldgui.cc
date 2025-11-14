@@ -613,6 +613,9 @@ void WorldGui::Start()
 {
   World::Start();
 
+  // When the simulation starts, set the paused-flag to false
+  this->paused = false;
+
   // start the timer that causes regular redraws
   Fl::add_timeout(((double)canvas->interval / 1000), (Fl_Timeout_Handler)Canvas::TimerCallback,
                   canvas);
@@ -638,6 +641,10 @@ void WorldGui::Stop()
 {
   World::Stop();
 
+  // When the simulation is paused, set the paused-flag as well as the was_paused-flag to true
+  this->paused = true;
+  this->was_paused = true;
+
   Fl::remove_timeout((Fl_Timeout_Handler)Canvas::TimerCallback);
   Fl::remove_timeout((Fl_Timeout_Handler)UpdateCallback);
   Fl::remove_idle((Fl_Timeout_Handler)UpdateCallback, this);
@@ -650,6 +657,12 @@ void WorldGui::Stop()
 void WorldGui::pauseCb(Fl_Widget *, WorldGui *wg)
 {
   wg->TogglePause();
+
+  // If pause was toggled and we are in pause-mode afterwards, set the was_paused flag also to true
+  if( wg->paused == true )
+  {
+    wg->was_paused = true;
+  }
 }
 
 void WorldGui::onceCb(Fl_Widget *, WorldGui *wg)
